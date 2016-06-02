@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Shooter;
 
 namespace FormPrototype
 {
@@ -16,7 +17,12 @@ namespace FormPrototype
         public Form1()
         {
             InitializeComponent();
+            test = new PointTest();
         }
+
+        public int i = 0;
+
+        private PointTest test;
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
@@ -92,7 +98,6 @@ namespace FormPrototype
         {
             initialAngle = initialAngle * (Math.PI / 180);
             double verticalVelocity = initialVelocity * System.Math.Sin((Double)initialAngle);
-            //verticalVelocity = System.Math.Round(verticalVelocity, 2);
             return verticalVelocity;
         }
 
@@ -100,21 +105,18 @@ namespace FormPrototype
         {
             initialAngle = initialAngle * (Math.PI / 180);
             double horizontalVelocity = initialVelocity * System.Math.Cos((Double)initialAngle);
-            //horizontalVelocity = System.Math.Round(horizontalVelocity, 2);
             return horizontalVelocity;
         }
 
         public double TimeToPeak(double verticalVelocity)
         {
             double timeToPeak = verticalVelocity / 9.81; // t = u / g
-            //timeToPeak = System.Math.Round(timeToPeak, 2);
             return timeToPeak;
         }
 
         public double DistanceToPeak(double verticalVelocity, double timeToPeak)
         {
             double distanceToPeak = (verticalVelocity * timeToPeak) - (0.5 * 9.81 * System.Math.Pow(timeToPeak, 2)); // s = ut + 0.5at^2
-            //distanceToPeak = System.Math.Round(distanceToPeak, 2);
             return distanceToPeak;
         }
 
@@ -156,27 +158,56 @@ namespace FormPrototype
 
         public void saveToFileX(double x)
         {
-            StreamWriter file = new StreamWriter("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testX.txt", true);
+            StreamWriter file = new StreamWriter("H:\\Computing Coursework\\Code\\FormPrototype\\testX.txt", true);
             file.WriteLine(x);
             file.Close();
         }
 
         public void saveToFileY(double y)
         {
-            StreamWriter file = new StreamWriter("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testY.txt", true);
+            StreamWriter file = new StreamWriter("H:\\Computing Coursework\\Code\\FormPrototype\\testY.txt", true);
             file.WriteLine(y);
             file.Close();
         }
 
         private void btnPlotGraph_Click(object sender, EventArgs e)
         {
-            string[] xCoordinates = File.ReadAllLines("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testX.txt");
-            string[] yCoordinates = File.ReadAllLines("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testY.txt");
+            chart1.ChartAreas[0].AxisX.Minimum = 0;
+            chart1.ChartAreas[0].AxisX.Maximum = double.Parse(txtTotalHorizontalDistance.Text);
+            chart1.ChartAreas[0].AxisY.Minimum = 0 - double.Parse(txtInitialHeight.Text);
+            chart1.ChartAreas[0].AxisY.Maximum = double.Parse(txtTotalVerticalDistance.Text);
+            timer1.Tick += timer1_Tick;
+            timer1.Start();
+        }
 
-            for (int i = 0; i < xCoordinates.Length; i++)
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            string[] xStringCoordinates = File.ReadAllLines("H:\\Computing Coursework\\Code\\FormPrototype\\testX.txt");
+            double[] xCoordinates = xStringCoordinates.Select(x => Convert.ToDouble(x)).ToArray();
+
+            string[] yStringCoordinates = File.ReadAllLines("H:\\Computing Coursework\\Code\\FormPrototype\\testY.txt");
+            double[] yCoordinates = yStringCoordinates.Select(y => Convert.ToDouble(y)).ToArray();
+
+            chart1.Series["Projectile1"].Points.AddXY(xCoordinates[i], yCoordinates[i]);
+
+            test.Update((int)xCoordinates[i], -(int)yCoordinates[i]);
+
+            if (i >= xCoordinates.Length - 1)
             {
-                chart1.Series["Projectile1"].Points.AddXY(xCoordinates[i], yCoordinates[i]);
+                timer1.Stop();
             }
+            else
+            {
+                i++;
+            }
+            this.Refresh();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Graphics dc = e.Graphics;
+            test.DrawImage(dc);
+            base.OnPaint(e);
         }
     }
 }
