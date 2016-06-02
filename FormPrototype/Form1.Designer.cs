@@ -149,6 +149,7 @@
             this.chart1.Size = new System.Drawing.Size(1268, 381);
             this.chart1.TabIndex = 7;
             this.chart1.Text = "chart1";
+            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
             // txtHorizontalVelocity
             // 
@@ -316,7 +317,6 @@
             // timer1
             // 
             this.timer1.Interval = 10;
-            //this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 

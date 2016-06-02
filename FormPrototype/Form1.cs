@@ -24,8 +24,11 @@ namespace FormPrototype
 
         private PointTest test;
 
+        ToolTip tip = new ToolTip();
+
         private void btnCalculate_Click(object sender, EventArgs e)
         {
+            btnCalculate.Enabled = false;
             InputInitialValues();
         }
 
@@ -158,20 +161,21 @@ namespace FormPrototype
 
         public void saveToFileX(double x)
         {
-            StreamWriter file = new StreamWriter("H:\\Computing Coursework\\Code\\FormPrototype\\testX.txt", true);
+            StreamWriter file = new StreamWriter("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testX.txt", true);
             file.WriteLine(x);
             file.Close();
         }
 
         public void saveToFileY(double y)
         {
-            StreamWriter file = new StreamWriter("H:\\Computing Coursework\\Code\\FormPrototype\\testY.txt", true);
+            StreamWriter file = new StreamWriter("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testY.txt", true);
             file.WriteLine(y);
             file.Close();
         }
 
         private void btnPlotGraph_Click(object sender, EventArgs e)
         {
+            btnPlotGraph.Enabled = false;
             chart1.ChartAreas[0].AxisX.Minimum = 0;
             chart1.ChartAreas[0].AxisX.Maximum = double.Parse(txtTotalHorizontalDistance.Text);
             chart1.ChartAreas[0].AxisY.Minimum = 0 - double.Parse(txtInitialHeight.Text);
@@ -182,10 +186,10 @@ namespace FormPrototype
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            string[] xStringCoordinates = File.ReadAllLines("H:\\Computing Coursework\\Code\\FormPrototype\\testX.txt");
+            string[] xStringCoordinates = File.ReadAllLines("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testX.txt");
             double[] xCoordinates = xStringCoordinates.Select(x => Convert.ToDouble(x)).ToArray();
 
-            string[] yStringCoordinates = File.ReadAllLines("H:\\Computing Coursework\\Code\\FormPrototype\\testY.txt");
+            string[] yStringCoordinates = File.ReadAllLines("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testY.txt");
             double[] yCoordinates = yStringCoordinates.Select(y => Convert.ToDouble(y)).ToArray();
 
             chart1.Series["Projectile1"].Points.AddXY(xCoordinates[i], yCoordinates[i]);
@@ -208,6 +212,13 @@ namespace FormPrototype
             Graphics dc = e.Graphics;
             test.DrawImage(dc);
             base.OnPaint(e);
+        }
+
+        private void chart1_MouseMove(object sender, MouseEventArgs e)
+        {
+            int valx = Convert.ToInt32(chart1.ChartAreas[0].AxisX.PixelPositionToVal‌​ue(e.X));
+            int valy = Convert.ToInt32(chart1.ChartAreas[0].AxisY.PixelPositionToVal‌​ue(e.Y));
+            tip.Show("X = " + valx + ", Y = " + valy, this, e.X, e.Y);
         }
     }
 }
