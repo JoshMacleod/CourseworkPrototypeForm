@@ -161,14 +161,14 @@ namespace FormPrototype
 
         public void saveToFileX(double x)
         {
-            StreamWriter file = new StreamWriter("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testX.txt", true);
+            StreamWriter file = new StreamWriter("H:\\Computing Coursework\\Code\\FormPrototype\\testX.txt", true);
             file.WriteLine(x);
             file.Close();
         }
 
         public void saveToFileY(double y)
         {
-            StreamWriter file = new StreamWriter("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testY.txt", true);
+            StreamWriter file = new StreamWriter("H:\\Computing Coursework\\Code\\FormPrototype\\testY.txt", true);
             file.WriteLine(y);
             file.Close();
         }
@@ -186,15 +186,18 @@ namespace FormPrototype
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            string[] xStringCoordinates = File.ReadAllLines("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testX.txt");
+            string[] xStringCoordinates = File.ReadAllLines("H:\\Computing Coursework\\Code\\FormPrototype\\testX.txt");
             double[] xCoordinates = xStringCoordinates.Select(x => Convert.ToDouble(x)).ToArray();
 
-            string[] yStringCoordinates = File.ReadAllLines("C:\\Users\\Josh Macleod\\Documents\\School\\Computing Coursework\\FormPrototype\\testY.txt");
+            string[] yStringCoordinates = File.ReadAllLines("H:\\Computing Coursework\\Code\\FormPrototype\\testY.txt");
             double[] yCoordinates = yStringCoordinates.Select(y => Convert.ToDouble(y)).ToArray();
 
             chart1.Series["Projectile1"].Points.AddXY(xCoordinates[i], yCoordinates[i]);
 
-            test.Update((int)xCoordinates[i], -(int)yCoordinates[i]);
+            double xScale = GetXAxisScale((float.Parse(txtTotalHorizontalDistance.Text)));
+            double yScale = GetYAxisScale((float.Parse(txtTotalVerticalDistance.Text)));
+
+            test.Update(((float)xCoordinates[i] * (float)xScale), (((-(float)yCoordinates[i] - float.Parse(txtInitialHeight.Text)) * (float)yScale)));
 
             if (i >= xCoordinates.Length - 1)
             {
@@ -216,9 +219,21 @@ namespace FormPrototype
 
         private void chart1_MouseMove(object sender, MouseEventArgs e)
         {
-            int valx = Convert.ToInt32(chart1.ChartAreas[0].AxisX.PixelPositionToVal‌​ue(e.X));
-            int valy = Convert.ToInt32(chart1.ChartAreas[0].AxisY.PixelPositionToVal‌​ue(e.Y));
-            tip.Show("X = " + valx + ", Y = " + valy, this, e.X, e.Y);
+            int valX = Convert.ToInt32(chart1.ChartAreas[0].AxisX.PixelPositionToVal‌​ue(e.X));
+            int valY = Convert.ToInt32(chart1.ChartAreas[0].AxisY.PixelPositionToVal‌​ue(e.Y));
+            tip.Show("X = " + valX + ", Y = " + valY, this, e.X, e.Y);
+        }
+
+        public double GetXAxisScale(float totalHorizontalDistance)
+        {
+            float xScale = 1130 / totalHorizontalDistance;
+            return xScale;
+        }
+
+        public double GetYAxisScale(float totalVerticalDistance)
+        {
+            float yScale = 315 / totalVerticalDistance;
+            return yScale;
         }
     }
 }

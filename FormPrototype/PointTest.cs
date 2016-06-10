@@ -15,16 +15,16 @@ namespace FormPrototype
 
         public PointTest() : base(Resources.RedDot)
         {
-            pointRectangle.X = 10;
-            pointRectangle.Y = 10;
+            //pointRectangle.X = 10;
+            //pointRectangle.Y = 10;
         }
 
-        public void Update(int X, int Y)
+        public void Update(float X, float Y)            // 103, 483
         {
-            Left = X;
-            Top = Y;
-            pointRectangle.X = Left;
-            pointRectangle.Y = Top;
+            Left = X + 103;
+            Top = Y + 483;
+            //pointRectangle.X = Left;
+            //pointRectangle.Y = Top;
         }
 
         public override string ToString()

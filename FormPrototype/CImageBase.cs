@@ -12,17 +12,17 @@ namespace Shooter
         bool disposed = false;
 
         Bitmap bitmap;
-        private int X;
+        private float X;
 
-        public int Left
+        public float Left
         {
             get { return X; }
             set { X = value; }
         }
 
-        private int Y;
+        private float Y;
 
-        public int Top
+        public float Top
         {
             get { return Y; }
             set { Y = value; }
